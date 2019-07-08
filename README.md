@@ -3,6 +3,8 @@
 
 # "XIAG Polls" application structure
 
+[![Build Status](https://travis-ci.org/bars83/xiag-polls.png)](https://travis-ci.org/bars83/xiag-polls)
+
 ## The following component level structure is planned:
 * Use ``php-fpm`` + ``Twig`` + ``MySQL`` + ``nginx`` for backend;
 * ``React``, ``webpack`` for frontend;

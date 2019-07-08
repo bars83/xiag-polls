@@ -3,6 +3,9 @@
 
 # Описание архитектуры для приложения "XIAG Polls"
 
+[![Build Status](https://travis-ci.org/bars83/xiag-polls.png)](https://travis-ci.org/bars83/xiag-polls)
+
+
 ## Планируется следующая архитектура на уровне компонентов:
 * На backend использование связки php-fpm+Twig+MySQL+nginx;
 * Для frontend - React, сборка webpack'ом;
