@@ -9,7 +9,6 @@
 * Use ``php-fpm`` + ``Twig`` + ``MySQL`` + ``nginx`` for backend;
 * ``React``, ``webpack`` for frontend;
 * Install required packages and libraries via ``composer`` and ``yarn``; 
-* Setup ``nginx`` response caching for load reduction of backend in case of DoS attack;
 * Run components with [docker containers](https://docs.docker.com/install/), component linking must be declared in [docker-compose](https://docs.docker.com/compose/install/) file, to have an immutable components state in others environments.
 
 ## Application level structure is planned with following order:
