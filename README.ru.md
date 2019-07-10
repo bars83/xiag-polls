@@ -5,6 +5,7 @@
 
 [![Build Status](https://travis-ci.org/bars83/xiag-polls.png)](https://travis-ci.org/bars83/xiag-polls)
 
+### [Описание задачи](https://test-task.xiag.ch/fullstack-developer.html)
 
 ## Планируется следующая архитектура на уровне компонентов:
 * На backend использование связки php-fpm+Twig+MySQL+nginx;
