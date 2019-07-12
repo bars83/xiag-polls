@@ -1,9 +1,7 @@
-* [English](README.md)
+* [English](CONDITIONS.md)
 * Russian :point_left:
 
 # Описание архитектуры для приложения "XIAG Polls"
-
-[![Build Status](https://travis-ci.org/bars83/xiag-polls.png)](https://travis-ci.org/bars83/xiag-polls)
 
 ### [Описание задачи](https://test-task.xiag.ch/fullstack-developer.html)
 

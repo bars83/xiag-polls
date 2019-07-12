@@ -1,0 +1,7 @@
+.idea
+vendor
+dist
+docker/data/logs
+docker/db
+docker/nginx/config/site.conf
+node_modules/
