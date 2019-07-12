@@ -1,2 +1,2 @@
 language: bash
-script: test -f README.md && test -f README.ru.md
+script: test -f README.md
