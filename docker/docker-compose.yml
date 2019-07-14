@@ -1,22 +1,24 @@
 version: "3.4"
 services:
   db:
-    image: mysql:5.6
+    image: mysql:5.7
     container_name: 'db.${ENDPOINT_NAME}'
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: smena
-      MYSQL_PASSWORD: smena
-      MYSQL_DATABASE: smena
+      MYSQL_USER: ${ENDPOINT_NAME}
+      MYSQL_PASSWORD: ${ENDPOINT_NAME}
+      MYSQL_DATABASE: ${ENDPOINT_NAME}
+    ports:
+      - 3306:3306
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
     volumes:
-      - ./db/data:/var/lib/mysql
-      - /etc/localtime:/etc/localtime:ro
+      - ./data/db:/var/lib/mysql
       - ./data/dump:/docker-entrypoint-initdb.d
+      - /etc/localtime:/etc/localtime:ro
   web:
     image: nginx:latest
     restart: unless-stopped
@@ -35,6 +37,21 @@ services:
     build:
       context: ./php
     container_name: 'php.${ENDPOINT_NAME}'
+    environment:
+      ENDPOINT_NAME: ${ENDPOINT_NAME}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ../:/var/www/html
+      - ./data/composer-cache:/var/www/.composer/cache
+  socket_io:
+    image: node
+    container_name: 'socketio.${ENDPOINT_NAME}'
+    user: "node"
+    volumes:
+      - ./socket:/home/node/app
+    working_dir: /home/node/app
+    command: "yarn start"
+  redis:
+    image: redis
+    container_name: 'redis.${ENDPOINT_NAME}'
+    command: ["sh", "-c", "exec redis-server --requirepass \"${REDIS_PASSWORD}\""]

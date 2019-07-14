@@ -1,14 +1,12 @@
 const webpack = require("webpack");
-var path = require('path');
+let path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var plugins = [
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
     new ExtractTextPlugin('/css/[name].css'),
     new webpack.ProvidePlugin({
         $: "jquery", jQuery: "jquery"
-    })
+    }),
 ];
 
 module.exports = {
@@ -17,6 +15,12 @@ module.exports = {
         './assets/js/index.js',
         './assets/css/style.css'
     ],
+
+    output: {
+        path: path.resolve(__dirname, './public/dist'),
+        filename: './js/[name].js',
+        publicPath: '/'
+    },
 
     module: {
         rules: [

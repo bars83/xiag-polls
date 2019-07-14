@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block taskname %}
+    Poll website task: HTML example 2
+{% endblock %}
+
+{% block content %}
+    <h1>
+        {{ question }}
+    </h1>
+    {% if not voted %}
+        <form action="/vote" method="post" id="poll_form">
+            <input type="hidden" name="uid" value="{{ uid }}">
+            <div class="ex2-question">
+                <div class="ex2-question__label">
+                    Your name:
+                </div>
+                <div class="ex2-question__input">
+                    <input type="text" name="user_name" class="input-text" required>
+                </div>
+                <div class="ex2-question__answer">
+
+                    {% for answer in answers %}
+                        <label>
+                            <input type="radio" name="result" value="{{ answer['id'] }}" required="required">
+                            {{ answer['value'] }}
+                        </label>
+                    {% endfor %}
+                </div>
+                <div class="ex2-question__submit">
+                    <input type="submit" class="btn" value="Submit">
+                </div>
+            </div>
+        </form>
+    {% endif %}
+    <h1>
+        Results
+    </h1>
+    <br>
+    <div id="results-table">
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script type="text/javascript">
+        const uid = '{{ uid }}';
+        const answers = JSON.parse('{{ answers|json_encode()|raw }}');
+        const results = JSON.parse('{{ results|json_encode()|raw }}');
+        loadResults();
+    </script>
+
+{% endblock %}

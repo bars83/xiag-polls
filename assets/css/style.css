@@ -40,7 +40,7 @@ img {
 }
 
 .page__image {
-    background: url('../images/header.jpg') center 0 no-repeat;
+    background: url('/images/header.jpg') center 0 no-repeat;
     height: 95px;
     line-height: 95px;
     background-size: cover;

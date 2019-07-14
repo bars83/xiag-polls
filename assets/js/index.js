@@ -1,9 +1,11 @@
-import '../css/style.css';
+import loadResults from './results';
+import loadTable from './poll';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
 
-ReactDOM.render(
-    <h1>Hello, react!</h1>,
-    document.getElementById('root')
-);
+global.loadResults = () => {
+    loadResults();
+};
+
+global.loadTable = () => {
+    loadTable();
+};

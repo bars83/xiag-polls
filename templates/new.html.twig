@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+
+{% block taskname %}
+    Poll website task: HTML example 1
+{% endblock %}
+
+{% block content %}
+    <form action="/new" method="post">
+        <table class="poll-table">
+            <thead>
+            <tr>
+                <th width="33%">Question:</th>
+                <th colspan="2" width="66%">
+                    <input type="text" name="question" placeholder="Put your question here" class="input-text" required/>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="table">
+
+            </tbody>
+        </table>
+
+        <button class="btn btn--start" type="submit">
+            Start
+        </button>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script type="text/javascript">
+        loadTable();
+    </script>
+
+{% endblock %}

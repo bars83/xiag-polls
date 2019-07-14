@@ -1,0 +1,12 @@
+<phpunit bootstrap="vendor/autoload.php"
+         colors="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false">
+
+    <testsuites>
+        <testsuite name="all">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+
+</phpunit>
