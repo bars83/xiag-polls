@@ -1,9 +1,12 @@
 <?php
 
+namespace App\Controller;
+
+use App\DataService\DataServiceInterface;
+use App\Service\PollService;
+use App\WebsocketService\WebSocketServiceInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-
-require_once __DIR__ . '/../Service/PollService.php';
 
 class PollController
 {
@@ -17,9 +20,14 @@ class PollController
      */
     private $twig;
 
-    public function __construct()
+    /**
+     * PollController constructor.
+     * @param $dataService DataServiceInterface
+     * @param $notifierService WebSocketServiceInterface
+     */
+    public function __construct($dataService, $notifierService)
     {
-        $this->service = new PollService();
+        $this->service = new PollService($dataService, $notifierService);
         $loader = new FilesystemLoader(__DIR__ . '/../../templates');
         $this->twig = new Environment($loader);
     }
@@ -50,7 +58,7 @@ class PollController
                     'voted' => $voted]
             );
             $this->service->sendResponse($body, 200);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->service->sendResponse('error 500', 500);
         }
 
@@ -63,7 +71,7 @@ class PollController
         try {
             $this->service->createPoll($question, $answers, $uid);
             header('Location: /' . $uid);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->service->sendResponse('error 500', 500);
         }
     }

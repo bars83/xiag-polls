@@ -1,9 +1,15 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../src/Controller/PollController.php';
+namespace App;
 
-$controller = new PollController();
+use App\Controller\PollController;
+use App\DataService\MySqlDataService;
+use App\WebsocketService\RedisChatNotifierService;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+
+$controller = new PollController(new MySqlDataService(), new RedisChatNotifierService());
 
 
 $router = new \Bramus\Router\Router();

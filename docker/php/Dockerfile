@@ -34,4 +34,4 @@ RUN usermod -u 1000 www-data
 
 USER www-data
 
-CMD php-fpm
+CMD composer install --dev --no-interaction && php-fpm

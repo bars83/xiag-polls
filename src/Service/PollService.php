@@ -1,106 +1,63 @@
 <?php
 
+namespace App\Service;
+
+use App\DataService\DataServiceInterface;
+use App\WebsocketService\WebSocketServiceInterface;
+
 class PollService
 {
-    private $pdo;
+    private $dataService;
+    private $notifierService;
 
-    public function __construct()
+    /**
+     * PollService constructor.
+     * @param $dataService DataServiceInterface
+     * @param $notifierService WebSocketServiceInterface
+     */
+    public function __construct($dataService, $notifierService)
     {
-        $this->pdo = new PDO(
-            'mysql:host=db;charset=utf8;dbname=' . $_ENV['ENDPOINT_NAME'],
-            $_ENV['ENDPOINT_NAME'],
-            $_ENV['ENDPOINT_NAME']
-        );
+        $this->dataService = $dataService;
+        $this->notifierService = $notifierService;
     }
-
 
     public function getQuestion($uid)
     {
-        $statement = $this->pdo->prepare('select question from poll where uid=:uid');
-        $statement->execute(array('uid' => $uid));
-        $question = $statement->fetchColumn();
-        return $question;
+        return $this->dataService->getQuestion($uid);
     }
 
     public function getAnswers($uid)
     {
-        $statement = $this->pdo->prepare('select id, value from answer where poll_uid=:poll_uid');
-        $statement->bindParam(":poll_uid", $uid, PDO::PARAM_STR);
-        $statement->execute();
-        $answers = $statement->fetchAll(PDO::FETCH_ASSOC);
-        return $answers;
+        return $this->dataService->getAnswers($uid);
     }
 
     public function getResults($uid)
     {
-        $statement = $this->pdo->prepare('select r.answer_id, r.user_name from result r inner join answer a on a.id=r.answer_id where a.poll_uid=:poll_uid');
-        $statement->bindParam(":poll_uid", $uid, PDO::PARAM_STR);
-        $statement->execute();
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        return $results;
+        return $this->dataService->getResults($uid);
     }
 
     public function createPoll($question, $answers, $uid)
     {
-        $statement = $this->pdo->prepare('insert into poll(question, uid) values(:question,:uid)');
-        $statement->execute(
-            [
-                'question' => $question,
-                'uid' => $uid
-            ]
-        );
+        $this->dataService->createPoll($question, $uid);
 
         foreach ($answers as $answer) {
-            $statement = $this->pdo->prepare('insert into answer(poll_uid, value) values(:uid, :answer)');
-            $statement->execute(
-                [
-                    'uid' => $uid,
-                    'answer' => $answer
-                ]
-            );
+            $this->dataService->createAnswer($answer, $uid);
         }
     }
 
     public function saveVote($userName, $result)
     {
-        $statement = $this->pdo->prepare('insert into result(answer_id, user_name) values(:answer_id,:user_name)');
-        $statement->execute(
-            [
-                'answer_id' => $result,
-                'user_name' => $userName
-            ]
-        );
+        $this->dataService->saveVote($userName, $result);
     }
 
     public function checkAnswerValid($uid, $answer)
     {
-        $statement = $this->pdo->prepare('select count(*) from answer where poll_uid=:uid and id=:id');
-        $statement->execute(
-            [
-                'uid' => $uid,
-                'id' => $answer
-            ]
-        );
-        $check = $statement->fetchColumn();
-        return $check;
+        return $this->dataService->checkAnswerIsInPoll($uid, $answer);
     }
 
     public function notifyVoters($uid, $answers, $results)
     {
-        $redis = new Redis();
-        $redis->connect(
-            'redis',
-            6379
-        );
-        $redis->auth('xiag');
-        $room = $uid;
-        $redis->publish(
-            $room,
-            json_encode([
-                'answers' => $answers, 'results' => $results
-            ])
-        );
-        $redis->close();
+        $this->notifierService->notify($uid, $answers, $results);
     }
 
     public function sendResponse($responseBody, $code)

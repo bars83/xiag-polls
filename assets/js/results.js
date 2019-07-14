@@ -9,14 +9,18 @@ import io from 'socket.io-client';
 let socket = io(window.location.protocol + '//' + window.location.host);
 
 $('#poll_form').submit(function (e) {
-    axios.post('/vote', $(this).serialize()).then(() => {
-            $.cookie('xiag_poll_' + uid, 1);
-            $(this).remove();
-        }
-    ).catch((exception)=>{
-        console.log(exception);
-        alert('error sending your vote');
-    });
+    if ($.cookie('xiag_poll_' + uid) === "1") {
+        $(this).remove();
+        alert('You already vote!');
+    } else
+        axios.post('/vote', $(this).serialize()).then(() => {
+                $.cookie('xiag_poll_' + uid, 1);
+                $(this).remove();
+            }
+        ).catch((exception) => {
+            console.log(exception);
+            alert('error sending your vote');
+        });
     e.preventDefault();
 });
 

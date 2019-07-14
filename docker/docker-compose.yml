@@ -26,6 +26,9 @@ services:
     environment:
       ENDPOINT_NAME: ${ENDPOINT_NAME}
     command: sh -c "envsubst '$$ENDPOINT_NAME' < /etc/nginx/conf.d/site.template > /etc/nginx/conf.d/site.conf && exec nginx -g 'daemon off;'"
+    links:
+      - php
+      - socket_io
     volumes:
       - ./nginx/config:/etc/nginx/conf.d
       - ./data/logs/nginx:/var/log/nginx
@@ -48,7 +51,7 @@ services:
     volumes:
       - ../socket:/home/node/app
     working_dir: /home/node/app
-    command: "yarn install && yarn start"
+    command: sh -c "yarn install && yarn start"
   webpack:
     image: node
     container_name: 'webpack.${ENDPOINT_NAME}'
@@ -56,7 +59,7 @@ services:
     volumes:
       - ../:/home/node/app
     working_dir: /home/node/app
-    command: "yarn install && yarn build"
+    command: sh -c "yarn install && yarn build"
   redis:
     image: redis
     container_name: 'redis.${ENDPOINT_NAME}'
