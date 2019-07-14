@@ -5,12 +5,10 @@ services:
     container_name: 'db.${ENDPOINT_NAME}'
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${ENDPOINT_NAME}
       MYSQL_USER: ${ENDPOINT_NAME}
       MYSQL_PASSWORD: ${ENDPOINT_NAME}
       MYSQL_DATABASE: ${ENDPOINT_NAME}
-    ports:
-      - 3306:3306
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
@@ -24,7 +22,7 @@ services:
     restart: unless-stopped
     container_name: 'web.${ENDPOINT_NAME}'
     ports:
-      - "8005:80"
+      - ${PORT}:80
     environment:
       ENDPOINT_NAME: ${ENDPOINT_NAME}
     command: sh -c "envsubst '$$ENDPOINT_NAME' < /etc/nginx/conf.d/site.template > /etc/nginx/conf.d/site.conf && exec nginx -g 'daemon off;'"
@@ -48,9 +46,17 @@ services:
     container_name: 'socketio.${ENDPOINT_NAME}'
     user: "node"
     volumes:
-      - ./socket:/home/node/app
+      - ../socket:/home/node/app
     working_dir: /home/node/app
-    command: "yarn start"
+    command: "yarn install && yarn start"
+  webpack:
+    image: node
+    container_name: 'webpack.${ENDPOINT_NAME}'
+    user: "node"
+    volumes:
+      - ../:/home/node/app
+    working_dir: /home/node/app
+    command: "yarn install && yarn build"
   redis:
     image: redis
     container_name: 'redis.${ENDPOINT_NAME}'

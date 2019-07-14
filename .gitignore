@@ -4,5 +4,6 @@ public/dist
 docker/data/logs
 docker/db
 docker/nginx/config/site.conf
+docker/.env
 node_modules/
 .phpunit.result.cache
