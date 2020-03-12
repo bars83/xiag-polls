@@ -8,8 +8,13 @@ use App\WebsocketService\RedisChatNotifierService;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+$pdo = new \PDO(
+    'mysql:host=db;charset=utf8;dbname=' . $_ENV['ENDPOINT_NAME'],
+    $_ENV['ENDPOINT_NAME'],
+    $_ENV['ENDPOINT_NAME']
+);
 
-$controller = new PollController(new MySqlDataService(), new RedisChatNotifierService());
+$controller = new PollController(new MySqlDataService($pdo), new RedisChatNotifierService());
 
 
 $router = new \Bramus\Router\Router();

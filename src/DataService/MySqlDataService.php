@@ -8,13 +8,9 @@ class MySqlDataService implements DataServiceInterface
 {
     private $pdo;
 
-    public function __construct()
+    public function __construct($pdo)
     {
-        $this->pdo = new \PDO(
-            'mysql:host=db;charset=utf8;dbname=' . $_ENV['ENDPOINT_NAME'],
-            $_ENV['ENDPOINT_NAME'],
-            $_ENV['ENDPOINT_NAME']
-        );
+        $this->pdo = $pdo;
     }
 
     public function getQuestion($uid)
